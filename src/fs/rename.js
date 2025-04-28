@@ -1,4 +1,4 @@
-import { promises as fs } from 'fs';
+import { rename as renameFile, access } from 'fs/promises';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -7,7 +7,7 @@ const __dirname = dirname(__filename);
 
 const rename = async () => {
   try {
-    await fs.access(join(__dirname, 'files', 'properFilename.md'));
+    await access(join(__dirname, 'files', 'properFilename.md'));
     throw new Error('FS operation failed: properFilename.md already exists');
   } catch (err) {
     if (err.code !== 'ENOENT') {
@@ -15,7 +15,7 @@ const rename = async () => {
     }
   }
 
-  fs.rename(join(__dirname, 'files', 'wrongFilename.txt'), join(__dirname, 'files', 'properFilename.md'))
+  renameFile(join(__dirname, 'files', 'wrongFilename.txt'), join(__dirname, 'files', 'properFilename.md'))
   .catch((err) => {
       if (err.code === 'ENOENT') {
           throw new Error('FS operation failed: wrongFilename.txt file does not exist');

@@ -1,4 +1,4 @@
-import { promises as fs } from 'fs';
+import { readdir } from 'fs/promises';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -7,7 +7,7 @@ const __dirname = dirname(__filename);
 
 const read = async () => {
     try {
-      const res = await fs.readdir(join(__dirname, 'files'));
+      const res = await readdir(join(__dirname, 'files'));
       console.log(res);
     } catch (err) {
       if (err.code === 'ENOENT') {

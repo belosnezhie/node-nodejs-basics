@@ -1,4 +1,4 @@
-import { promises as fs } from 'fs';
+import { cp, access } from 'fs/promises';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -10,7 +10,7 @@ const copy = async () => {
   const dest = join(__dirname, 'files_copy');
 
   try {
-    await fs.access(src);
+    await access(src);
   } catch (err) {
     if (err.code === 'ENOENT') {
       throw new Error('FS operation failed: files folder doesn not exist');
@@ -19,7 +19,7 @@ const copy = async () => {
   }
 
   try {
-    await fs.access(dest);
+    await access(dest);
     throw new Error('FS operation failed: files_copy has already been created');
   } catch (err) {
     if (err.code !== 'ENOENT') {
@@ -28,7 +28,7 @@ const copy = async () => {
   }
 
   try {
-    await fs.cp(src, dest, {
+    await cp(src, dest, {
       recursive: true,
       errorOnExist: true,
       force: false

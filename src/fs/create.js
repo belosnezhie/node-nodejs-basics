@@ -1,4 +1,4 @@
-import { promises as fs } from 'fs';
+import { writeFile, access } from 'fs/promises';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -6,13 +6,22 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const create = async () => {
-  const name = join(__dirname, 'files', 'fresh.txt');
+  const fileName = join(__dirname, 'files', 'fresh.txt');
   const content = 'I am fresh and young';
 
   try {
-    await fs.writeFile(name, content);
+    await access(fileName);
+    throw new Error('FS operation failed: fresh.txt has already been created');
   } catch (err) {
-    throw new Error('FS operation failed');
+    if (err.code !== 'ENOENT') {
+      throw err;
+    }
+  }
+
+  try {
+    await writeFile(fileName, content);
+  } catch (err) {
+    throw err;
   }
 };
 
