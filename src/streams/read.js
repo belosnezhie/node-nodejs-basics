@@ -13,6 +13,7 @@ const read = async () => {
   const stream = createReadStream(fileToReadPath, 'utf-8');
 
   await pipeline(stream, process.stdout, { end: false });
+  process.stdout.write('\n');
 };
 
 await read();
